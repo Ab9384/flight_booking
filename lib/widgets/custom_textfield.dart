@@ -66,6 +66,7 @@ class CustomTextField extends StatelessWidget {
             validator: validator,
             onChanged: onChanged,
             onTap: onTap,
+            textCapitalization: TextCapitalization.words,
             onFieldSubmitted: onFieldSubmitted,
             enabled: enabled,
             readOnly: readOnly ?? false,

@@ -1,3 +1,4 @@
+import 'package:flight/firebase/auth_function.dart';
 import 'package:flight/functions/navigator_function.dart';
 import 'package:flight/functions/regex_function.dart';
 import 'package:flight/screens/authentication/signup_screen.dart';
@@ -22,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen>
   String? emailError;
   String? passwordError;
   bool obscureText = true;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -45,212 +47,225 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back_rounded),
+      body: PopScope(
+        canPop: !isLoading,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back_rounded),
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: SlideTransition(
-                position: _animation,
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Let\'s Sign You In',
-                            style: TextStyle(
-                              color: AppColors.textColor,
-                              fontSize: 26,
-                              fontFamily: 'roboto-bold',
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Text(
-                            'Welcome back, you\'ve been missed!',
-                            style: TextStyle(
-                              color: AppColors.secondaryTextColor,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          CustomTextField(
-                            labelText: 'Email',
-                            hintText: 'Enter your email',
-                            keyboardType: TextInputType.emailAddress,
-                            errorText: emailError,
-                            controller: _emailController,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          CustomTextField(
-                            labelText: 'Password',
-                            hintText: 'Enter your password',
-                            keyboardType: TextInputType.visiblePassword,
-                            obscureText: obscureText,
-                            errorText: passwordError,
-                            controller: _passwordController,
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  obscureText = !obscureText;
-                                });
-                              },
-                              icon: Icon(
-                                obscureText
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: AppColors.secondaryTextColor,
+              Expanded(
+                child: SlideTransition(
+                  position: _animation,
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Let\'s Sign You In',
+                              style: TextStyle(
+                                color: AppColors.textColor,
+                                fontSize: 26,
+                                fontFamily: 'roboto-bold',
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          PrimaryButton(
-                            text: 'Sign In',
-                            onPressed: () {
-                              if (!RegexFunction.isEmailValid(
-                                  _emailController.text)) {
-                                setState(() {
-                                  emailError = 'Please enter a valid email';
-                                  passwordError = null;
-                                });
-                                return;
-                              }
-                              if (!RegexFunction.isPasswordValid(
-                                  _passwordController.text)) {
-                                setState(() {
-                                  emailError = null;
-                                  passwordError =
-                                      'Password must be 8 characters long and contain at least one letter and one number';
-                                });
-                                return;
-                              }
-                              debugPrint('Sign in');
-                              setState(() {
-                                emailError = null;
-                                passwordError = null;
-                              });
-                            },
-                            isBusy: false,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          // or with divider and text
-                          const Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Divider(
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              'Welcome back, you\'ve been missed!',
+                              style: TextStyle(
+                                color: AppColors.secondaryTextColor,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 50,
+                            ),
+                            CustomTextField(
+                              labelText: 'Email',
+                              hintText: 'Enter your email',
+                              keyboardType: TextInputType.emailAddress,
+                              errorText: emailError,
+                              controller: _emailController,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            CustomTextField(
+                              labelText: 'Password',
+                              hintText: 'Enter your password',
+                              keyboardType: TextInputType.visiblePassword,
+                              obscureText: obscureText,
+                              errorText: passwordError,
+                              controller: _passwordController,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    obscureText = !obscureText;
+                                  });
+                                },
+                                icon: Icon(
+                                  obscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
                                   color: AppColors.secondaryTextColor,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Text(
-                                  'OR',
-                                  style: TextStyle(
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            PrimaryButton(
+                              text: 'Sign In',
+                              onPressed: () async {
+                                if (!RegexFunction.isEmailValid(
+                                    _emailController.text)) {
+                                  setState(() {
+                                    emailError = 'Please enter a valid email';
+                                    passwordError = null;
+                                  });
+                                  return;
+                                }
+                                if (!RegexFunction.isPasswordValid(
+                                    _passwordController.text)) {
+                                  setState(() {
+                                    emailError = null;
+                                    passwordError =
+                                        'Password must be 8 characters long and contain at least one letter and one number';
+                                  });
+                                  return;
+                                }
+                                debugPrint('Sign in');
+                                setState(() {
+                                  emailError = null;
+                                  passwordError = null;
+                                  isLoading = true;
+                                });
+
+                                await AuthFunction().signInWithEmailAndPassword(
+                                    _emailController.text,
+                                    _passwordController.text,
+                                    context);
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              },
+                              isBusy: isLoading,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            // or with divider and text
+                            const Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Divider(
                                     color: AppColors.secondaryTextColor,
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Divider(
-                                  color: AppColors.secondaryTextColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          // sign in with google
-                          Center(
-                            child: ElevatedButton.icon(
-                                onPressed: () {},
-                                icon: Image.asset(
-                                  'assets/icons/google.png',
-                                  height: 20,
-                                  width: 20,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.backgroundColor,
-                                  surfaceTintColor: AppColors.backgroundColor,
-                                  splashFactory: NoSplash.splashFactory,
-                                  elevation: 1,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Text(
+                                    'OR',
+                                    style: TextStyle(
+                                      color: AppColors.secondaryTextColor,
+                                    ),
                                   ),
                                 ),
-                                label: const Text('Sign in with Google',
-                                    style: TextStyle(
-                                        color: AppColors.textColor,
-                                        fontWeight: FontWeight.w500))),
-                          )
-                        ],
+                                Expanded(
+                                  child: Divider(
+                                    color: AppColors.secondaryTextColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            // sign in with google
+                            Center(
+                              child: ElevatedButton.icon(
+                                  onPressed: () {},
+                                  icon: Image.asset(
+                                    'assets/icons/google.png',
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.backgroundColor,
+                                    surfaceTintColor: AppColors.backgroundColor,
+                                    splashFactory: NoSplash.splashFactory,
+                                    elevation: 1,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  label: const Text('Sign in with Google',
+                                      style: TextStyle(
+                                          color: AppColors.textColor,
+                                          fontWeight: FontWeight.w500))),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            // don't have an account yet
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Don\'t have an account?',
-                    style: TextStyle(
-                      color: AppColors.secondaryTextColor,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      NavigatorFunctions.navigateTo(
-                          context, const SignUpScreen());
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.all(0),
-                    ),
-                    child: const Text(
-                      'Sign Up',
+              // don't have an account yet
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Don\'t have an account?',
                       style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
+                        color: AppColors.secondaryTextColor,
                       ),
                     ),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () {
+                        NavigatorFunctions.navigateTo(
+                            context, const SignUpScreen());
+                      },
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.all(0),
+                      ),
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
         ),
       ),
     );

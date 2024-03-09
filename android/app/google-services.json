@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "995110788286",
+    "project_id": "flight9384",
+    "storage_bucket": "flight9384.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995110788286:android:8d2cbd1cd21a51853ed2ef",
+        "android_client_info": {
+          "package_name": "com.learning.flight"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBRFOrvOhrgl60rDSX5CF2Kl9gIz1Kn_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

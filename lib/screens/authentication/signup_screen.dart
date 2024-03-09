@@ -1,3 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flight/deciding_screen.dart';
+import 'package:flight/firebase/auth_function.dart';
+import 'package:flight/functions/navigator_function.dart';
 import 'package:flight/functions/regex_function.dart';
 import 'package:flight/utils/app_colors.dart';
 import 'package:flight/widgets/custom_textfield.dart';
@@ -15,14 +20,17 @@ class _SignUpScreenState extends State<SignUpScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  String? nameError;
   String? emailError;
   String? passwordError;
   String? confirmPasswordError;
   bool obscureText = true;
+  bool isBusy = false;
 
   @override
   void initState() {
@@ -102,6 +110,16 @@ class _SignUpScreenState extends State<SignUpScreen>
                             height: 50,
                           ),
                           CustomTextField(
+                            labelText: 'Name',
+                            hintText: 'Enter your name',
+                            keyboardType: TextInputType.name,
+                            errorText: nameError,
+                            controller: _nameController,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          CustomTextField(
                             labelText: 'Email',
                             hintText: 'Enter your email',
                             keyboardType: TextInputType.emailAddress,
@@ -161,12 +179,23 @@ class _SignUpScreenState extends State<SignUpScreen>
                           ),
                           PrimaryButton(
                             text: 'Sign Up',
-                            onPressed: () {
+                            onPressed: () async {
+                              if (_nameController.text.isEmpty) {
+                                setState(() {
+                                  nameError = 'Please enter your name';
+                                  emailError = null;
+                                  passwordError = null;
+                                  confirmPasswordError = null;
+                                });
+                                return;
+                              }
                               if (!RegexFunction.isEmailValid(
                                   _emailController.text)) {
                                 setState(() {
                                   emailError = 'Please enter a valid email';
                                   passwordError = null;
+                                  confirmPasswordError = null;
+                                  nameError = null;
                                 });
                                 return;
                               }
@@ -174,6 +203,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                                   _passwordController.text)) {
                                 setState(() {
                                   emailError = null;
+                                  confirmPasswordError = null;
+                                  nameError = null;
                                   passwordError =
                                       'Password must be 8 characters long and contain at least one letter and one number';
                                 });
@@ -182,6 +213,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                               if (_passwordController.text !=
                                   _confirmPasswordController.text) {
                                 setState(() {
+                                  nameError = null;
                                   emailError = null;
                                   passwordError = null;
                                   confirmPasswordError =
@@ -191,12 +223,27 @@ class _SignUpScreenState extends State<SignUpScreen>
                               }
                               debugPrint('Sign in');
                               setState(() {
+                                nameError = null;
                                 emailError = null;
                                 passwordError = null;
                                 confirmPasswordError = null;
+                                isBusy = true;
                               });
+                              bool isSignedUp = await AuthFunction()
+                                  .signUpWithEmailAndPassword(
+                                      _nameController.text,
+                                      _emailController.text,
+                                      _passwordController.text,
+                                      context);
+                              setState(() {
+                                isBusy = false;
+                              });
+                              if (isSignedUp) {
+                                NavigatorFunctions.navigateAndClearStack(
+                                    context, const DecidingScreen());
+                              }
                             },
-                            isBusy: false,
+                            isBusy: isBusy,
                           ),
                           const SizedBox(
                             height: 20,

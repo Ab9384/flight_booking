@@ -1,10 +1,18 @@
-import 'package:flight/screens/landing_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flight/deciding_screen.dart';
+import 'package:flight/firebase_options.dart';
+import 'package:flight/provider/app_data.dart';
 import 'package:flight/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -23,15 +31,18 @@ class MyApp extends StatelessWidget {
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
     );
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flight Booking App',
-      theme: ThemeData(
-        fontFamily: GoogleFonts.roboto().fontFamily,
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => AppData())],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flight Booking App',
+        theme: ThemeData(
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+          useMaterial3: true,
+        ),
+        home: const DecidingScreen(),
       ),
-      home: const LandingScreen(),
     );
   }
 }
