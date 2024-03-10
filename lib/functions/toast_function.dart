@@ -1,167 +1,237 @@
-// ignore_for_file: avoid_print
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../utils/app_colors.dart';
 
 class ToastFunction {
-  static void showRedToast(BuildContext context, String message) {
-    if (context.mounted == false) return;
-    // if context is invalid, return
-
-    try {
-      FToast fToast = FToast();
-      fToast.init(context);
-      fToast.showToast(
-        child: Stack(
+  static void showRedToast(
+      {required BuildContext context, required String message}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        elevation: 0,
+        content: Stack(
           children: [
             Container(
-              padding: const EdgeInsets.only(top: 20),
-              child: Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.redColor.withOpacity(0.6),
+              margin: const EdgeInsets.only(bottom: 0, top: 30),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: AppColors.redColor,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Error',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'roboto-bold',
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.backgroundColor,
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        message,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.backgroundColor,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  )),
+                  const SizedBox(height: 5),
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.backgroundColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            // chat bubble image
             Positioned(
-              left: 15,
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColors.redColor.withOpacity(0.9),
-                child: ExtendedImage.asset(
-                  'assets/icons/plane_takeoff.png',
-                  color: AppColors.backgroundColor,
-                  height: 20,
-                  width: 20,
-                ),
+              top: 0,
+              left: 20,
+              child: Stack(
+                children: [
+                  ExtendedImage.asset(
+                    'assets/icons/chat_bubble.png',
+                    height: 50,
+                    width: 50,
+                    color: AppColors.darkRed,
+                  ),
+                  const Positioned(
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    child: Icon(
+                      CupertinoIcons.clear_thick,
+                      color: AppColors.backgroundColor,
+                      size: 20,
+                    ),
+                  )
+                ],
               ),
             ),
           ],
         ),
-        gravity: ToastGravity.TOP,
-        toastDuration: const Duration(seconds: 2),
-      );
-    } catch (e) {
-      print(e);
-    }
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
+  // warning toast message
+  static void showOrangeToast(
+      {required BuildContext context, required String message}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        elevation: 0,
+        content: Stack(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 0, top: 30),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: AppColors.orangeColor,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Warning',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'roboto-bold',
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.backgroundColor,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.backgroundColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // chat bubble image
+            Positioned(
+              top: 0,
+              left: 20,
+              child: Stack(
+                children: [
+                  ExtendedImage.asset(
+                    'assets/icons/chat_bubble.png',
+                    height: 50,
+                    width: 50,
+                    color: AppColors.darkOrange,
+                  ),
+                  const Positioned(
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    child: Icon(
+                      CupertinoIcons.exclamationmark,
+                      color: AppColors.backgroundColor,
+                      size: 20,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  // show success toast message with green color
   static void showGreenToast(
-    BuildContext context,
-    String message,
-  ) {
-    if (context.mounted == false) return;
-    try {
-      FToast fToast = FToast();
-      fToast.init(context);
-      fToast.showToast(
-        child: Stack(
+      {required BuildContext context, required String message}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        elevation: 0,
+        content: Stack(
           children: [
             Container(
-              padding: const EdgeInsets.only(top: 20),
-              child: Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.greenColor.withOpacity(0.6),
+              margin: const EdgeInsets.only(bottom: 0, top: 30),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: AppColors.greenColor,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Success',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'roboto-bold',
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.backgroundColor,
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        message,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.backgroundColor,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  )),
+                  const SizedBox(height: 5),
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.backgroundColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            // chat bubble image
             Positioned(
-              left: 15,
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColors.greenColor.withOpacity(0.9),
-                child: ExtendedImage.asset(
-                  'assets/icons/plane_takeoff.png',
-                  color: AppColors.backgroundColor,
-                  height: 20,
-                  width: 20,
-                ),
+              top: 0,
+              left: 20,
+              child: Stack(
+                children: [
+                  ExtendedImage.asset(
+                    'assets/icons/chat_bubble.png',
+                    height: 50,
+                    width: 50,
+                    color: AppColors.darkGreen,
+                  ),
+                  const Positioned(
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    child: Icon(
+                      CupertinoIcons.checkmark,
+                      color: AppColors.backgroundColor,
+                      size: 20,
+                    ),
+                  )
+                ],
               ),
             ),
           ],
         ),
-        gravity: ToastGravity.TOP,
-        toastDuration: const Duration(seconds: 2),
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  // show white toast
-  static void showWhiteToast(String message, BuildContext context) {
-    if (context.mounted == false) return;
-    try {
-      FToast fToast = FToast();
-      fToast.init(context);
-      fToast.showToast(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: AppColors.backgroundColor,
-          ),
-          child: Text(
-            message,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-            ),
-          ),
-        ),
-        gravity: ToastGravity.BOTTOM,
-        toastDuration: const Duration(seconds: 2),
-      );
-    } catch (e) {
-      print(e);
-    }
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 }

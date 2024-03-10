@@ -63,19 +63,8 @@ class _SearchPageState extends State<SearchPage> {
                   child: AppBar(
                     backgroundColor: Colors.transparent,
                     centerTitle: true,
-                    leading: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ButtonStyle(
-                          fixedSize: MaterialStateProperty.all<Size>(
-                              const Size(30, 30)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              AppColors.secondaryTextColor.withOpacity(0.2))),
-                      icon: const Icon(
-                        Icons.arrow_back_rounded,
-                        color: AppColors.backgroundColor,
-                      ),
+                    leading: const BackButton(
+                      color: AppColors.backgroundColor,
                     ),
                     title: Text(
                       title,
@@ -151,6 +140,29 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+
+// class BackButton extends StatelessWidget {
+//   const BackButton({
+//     super.key,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return IconButton(
+//       onPressed: () {
+//         Navigator.pop(context);
+//       },
+//       style: ButtonStyle(
+//           fixedSize: MaterialStateProperty.all<Size>(const Size(30, 30)),
+//           backgroundColor: MaterialStateProperty.all<Color>(
+//               AppColors.secondaryTextColor.withOpacity(0.2))),
+//       icon: const Icon(
+//         Icons.arrow_back_rounded,
+//         color: AppColors.backgroundColor,
+//       ),
+//     );
+//   }
+// }
 
 class AirportTile extends StatelessWidget {
   final AirportModel airportModel;

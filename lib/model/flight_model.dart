@@ -1,16 +1,18 @@
-class TicketDetails {
+import 'package:flight/model/airport_model.dart';
+
+class FlightDetails {
   final String ticketId;
-  final String departure;
-  final String arrival;
+  final AirportModel departure;
+  final AirportModel arrival;
   final DateTime departureTime;
   final DateTime arrivalTime;
   final String duration;
   final String airline;
   final String flightClass;
   final String flightNumber;
-  final String price;
+  final double price;
 
-  TicketDetails({
+  FlightDetails({
     required this.ticketId,
     required this.departure,
     required this.arrival,
@@ -23,8 +25,8 @@ class TicketDetails {
     required this.price,
   });
 
-  factory TicketDetails.fromJson(Map<String, dynamic> json) {
-    return TicketDetails(
+  factory FlightDetails.fromJson(Map<String, dynamic> json) {
+    return FlightDetails(
       ticketId: json['ticketId'],
       departure: json['departure'],
       arrival: json['arrival'],

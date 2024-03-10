@@ -1,15 +1,15 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flight/functions/navigator_function.dart';
+import 'package:flight/functions/toast_function.dart';
 import 'package:flight/provider/app_data.dart';
 import 'package:flight/screens/date_picker.dart';
+import 'package:flight/screens/search/flight_result_page.dart';
 import 'package:flight/screens/search/search_page.dart';
 import 'package:flight/utils/app_colors.dart';
 import 'package:flight/utils/global_variable.dart';
 import 'package:flight/widgets/primary_button.dart';
 import 'package:flight/widgets/ticket_preview_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -520,126 +520,42 @@ class FlightSearchCard extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            // // dropdown for class
-            // GestureDetector(
-            //   onTap: () {
-            //     // IOS style picker scroll picker
-            //     showCupertinoModalPopup<void>(
-            //       context: context,
-            //       builder: (_) {
-            //         final size = MediaQuery.of(context).size;
-            //         return Container(
-            //           decoration: BoxDecoration(
-            //             color: Theme.of(context)
-            //                 .scaffoldBackgroundColor,
-            //             borderRadius: const BorderRadius.only(
-            //               topLeft: Radius.circular(12),
-            //               topRight: Radius.circular(12),
-            //             ),
-            //           ),
-            //           height: size.height * 0.23,
-            //           child: CupertinoPicker(
-            //             magnification: 1.22,
-            //             squeeze: 1.2,
-            //             useMagnifier: true,
-            //             itemExtent: 40,
-            //             // This sets the initial item.
-            //             scrollController:
-            //                 FixedExtentScrollController(
-            //               initialItem: classList.indexOf(
-            //                   data.selectedClass ?? ''),
-            //             ),
-            //             // This is called when selected item is changed.
-            //             onSelectedItemChanged:
-            //                 (int selectedItem) {
-            //               setState(() {
-            //                 data.setSelectedClass =
-            //                     classList[selectedItem];
-            //               });
-            //             },
-            //             children: List<Widget>.generate(
-            //               classList.length,
-            //               (int index) {
-            //                 return Center(
-            //                   child: Text(
-            //                     classList[index],
-            //                     style: const TextStyle(
-            //                       fontSize: 16,
-            //                     ),
-            //                   ),
-            //                 );
-            //               },
-            //             ),
-            //           ),
-            //         );
-            //       },
-            //     );
-            //   },
-            //   child: Container(
-            //     padding: const EdgeInsets.symmetric(
-            //         horizontal: 10, vertical: 10),
-            //     decoration: BoxDecoration(
-            //       color: AppColors.accentColor,
-            //       borderRadius: BorderRadius.circular(12),
-            //     ),
-            //     child: Row(
-            //       children: [
-            //         Expanded(
-            //             child: Column(
-            //           crossAxisAlignment:
-            //               CrossAxisAlignment.start,
-            //           mainAxisAlignment:
-            //               MainAxisAlignment.start,
-            //           children: [
-            //             const Text(
-            //               'Class',
-            //               style: TextStyle(
-            //                   color:
-            //                       AppColors.secondaryTextColor,
-            //                   fontSize: 12,
-            //                   fontWeight: FontWeight.bold),
-            //             ),
-            //             const SizedBox(
-            //               height: 2,
-            //             ),
-            //             Text(
-            //               data.selectedClass ?? 'Select Class',
-            //               overflow: TextOverflow.ellipsis,
-            //               style: const TextStyle(
-            //                   color: AppColors.primaryColor,
-            //                   fontSize: 14,
-            //                   fontWeight: FontWeight.bold),
-            //             ),
-            //           ],
-            //         )),
-            //         const SizedBox(
-            //           width: 10,
-            //         ),
-            //         // dropdown icon
-            //         IconButton(
-            //           onPressed: () {},
-            //           style: ButtonStyle(
-            //               fixedSize:
-            //                   MaterialStateProperty.all<Size>(
-            //                       const Size(30, 30)),
-            //               backgroundColor:
-            //                   MaterialStateProperty.all<Color>(
-            //                       AppColors.secondaryTextColor
-            //                           .withOpacity(0.3))),
-            //           icon: const Icon(
-            //             Icons.arrow_drop_down,
-            //             color: AppColors.primaryColor,
-            //           ),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // const SizedBox(
-            //   height: 15,
-            // ),
-            // search button
-            PrimaryButton(text: 'Search', onPressed: () {}, isBusy: isBusy)
+            PrimaryButton(
+                text: 'Search',
+                onPressed: () {
+                  if (data.selectedDepartureAirport == null) {
+                    ToastFunction.showOrangeToast(
+                        context: context,
+                        message: 'Please select departure airport');
+                    return;
+                  }
+                  if (data.selectedArrivalAirport == null) {
+                    ToastFunction.showOrangeToast(
+                        context: context,
+                        message: 'Please select arrival airport');
+                    return;
+                  }
+                  if (data.departureDate == null) {
+                    ToastFunction.showOrangeToast(
+                        context: context,
+                        message: 'Please select departure date');
+                    return;
+                  }
+                  if (data.returnDate == null) {
+                    ToastFunction.showOrangeToast(
+                        context: context, message: 'Please select return date');
+                    return;
+                  }
+                  if (data.passengerCount == 0) {
+                    ToastFunction.showOrangeToast(
+                        context: context,
+                        message: 'Please select passenger count');
+                    return;
+                  }
+                  NavigatorFunctions.navigateTo(
+                      context, const FlightResultPage());
+                },
+                isBusy: isBusy)
           ],
         ));
   }

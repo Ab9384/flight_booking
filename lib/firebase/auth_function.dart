@@ -16,13 +16,14 @@ class AuthFunction {
           email: email, password: password);
     } catch (e) {
       if (e.toString().contains('email-already-in-use')) {
-        ToastFunction.showRedToast(context, 'Email already in use');
+        ToastFunction.showRedToast(
+            context: context, message: 'Email already in use');
       } else if (e.toString().contains('invalid-email')) {
-        ToastFunction.showRedToast(context, 'Invalid email');
+        ToastFunction.showRedToast(context: context, message: 'Invalid email');
       } else if (e.toString().contains('weak-password')) {
-        ToastFunction.showRedToast(context, 'Weak password');
+        ToastFunction.showRedToast(context: context, message: 'Weak password');
       } else {
-        ToastFunction.showRedToast(context, e.toString());
+        ToastFunction.showRedToast(context: context, message: e.toString());
       }
       return isSignedUp;
     }
@@ -34,7 +35,7 @@ class AuthFunction {
     try {
       await DatabaseFunctions.addUserData(userModel.toJson());
     } catch (e) {
-      ToastFunction.showRedToast(context, e.toString());
+      ToastFunction.showRedToast(context: context, message: e.toString());
     }
     isSignedUp = true;
     return isSignedUp;
@@ -48,17 +49,18 @@ class AuthFunction {
       NavigatorFunctions.navigateAndClearStack(context, const DecidingScreen());
     } catch (e) {
       if (e.toString().contains('invalid-email')) {
-        ToastFunction.showRedToast(context, 'Invalid email');
+        ToastFunction.showRedToast(context: context, message: 'Invalid email');
       } else if (e.toString().contains('user-not-found')) {
-        ToastFunction.showRedToast(context, 'User not found');
+        ToastFunction.showRedToast(context: context, message: 'User not found');
       } else if (e.toString().contains('wrong-password')) {
-        ToastFunction.showRedToast(context, 'Wrong password');
+        ToastFunction.showRedToast(context: context, message: 'Wrong password');
       } else if (e.toString().contains('user-disabled')) {
-        ToastFunction.showRedToast(context, 'User disabled');
+        ToastFunction.showRedToast(context: context, message: 'User disabled');
       } else if (e.toString().contains('invalid-credential')) {
-        ToastFunction.showRedToast(context, 'Invalid credential');
+        ToastFunction.showRedToast(
+            context: context, message: 'Invalid credential');
       } else {
-        ToastFunction.showRedToast(context, e.toString());
+        ToastFunction.showRedToast(context: context, message: e.toString());
       }
     }
   }
