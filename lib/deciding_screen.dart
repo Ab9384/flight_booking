@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flight/firebase/auth_function.dart';
-import 'package:flight/firebase/database_function.dart';
 import 'package:flight/functions/navigator_function.dart';
 import 'package:flight/model/user_model.dart';
 import 'package:flight/provider/app_data.dart';

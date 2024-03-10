@@ -1,10 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flight/data/airport_data.dart';
 import 'package:flight/model/airport_model.dart';
-import 'package:flight/model/user_model.dart';
-import 'package:flight/provider/app_data.dart';
-import 'package:provider/provider.dart';
 
 class DatabaseFunctions {
   //  add user data to the database

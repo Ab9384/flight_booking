@@ -156,6 +156,10 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                       DateRangePickerNavigationDirection.vertical,
                   navigationMode: DateRangePickerNavigationMode.scroll,
                   enablePastDates: false,
+                  initialSelectedRange: PickerDateRange(
+                    data.departureDate ?? DateTime.now(),
+                    data.returnDate ?? DateTime.now(),
+                  ),
                   onSelectionChanged:
                       (DateRangePickerSelectionChangedArgs args) {
                     if (args.value is PickerDateRange) {
